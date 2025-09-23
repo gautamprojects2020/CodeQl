@@ -48,10 +48,10 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-      - name: Get Results Summary
-        run: |
-          echo "Analysis completed!"
-          echo "View results at: https://github.com/${{ github.repository }}/security/code-scanning"
-          echo "Check the 'Security' tab in your repository for detailed findings."
+      - name: Lint code base
+        uses: github/super-linter@v5
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_PYTHON: true # enable Python checks
+          VALIDATE_MARKDOWN: false
