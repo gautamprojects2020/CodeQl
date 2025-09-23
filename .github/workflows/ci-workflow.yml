@@ -35,17 +35,18 @@ jobs:
       - name: Extract and Convert Jupyter Notebooks
         run: |
           # Install required tools
-          pip install jupyter nbconvert pandas numpy
+          pip install nbconvert
+          mkdir -p notebooks_py
 
           # Convert all .ipynb files to .py for CodeQL analysis
           echo "Converting Jupyter notebooks to Python scripts..."
           find . -name "*.ipynb" -type f | while read notebook; do
             echo "Converting $notebook"
-            python -m nbconvert "$notebook" --to python --stdout > "${notebook%.ipynb}_converted.py" 2>/dev/null || echo "Warning: Could not convert $notebook"
+            jupyter nbconvert --to script "$nb" --output-dir notebooks_py
           done
 
-          # Also create a consolidated Python file with all notebook code
-          python scripts/convert_notebooks.py
+           # copy converted files back to the workspace root for scanning
+          rsync -a notebooks_py/ .
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
