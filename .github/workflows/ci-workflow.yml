@@ -1,54 +1,55 @@
-name: "CodeQL for Jupyter Notebooks"
+name: Scan Jupyter Notebooks
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
   schedule:
-    - cron: "0 0 * * 0" # Weekly scan
+    - cron: "0 2 * * 0" # optional weekly scan
 
 jobs:
-  codeql-analysis:
-    name: CodeQL Analysis for IPYNB
+  analyze:
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
+      security-events: write # required for CodeQL
       actions: read
       contents: read
-
     strategy:
       fail-fast: false
       matrix:
-        language: ["python"]
+        language: ["python"] # we treat notebooks as Python
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          languages: ${{ matrix.language }}
-          queries: security-and-quality, security-extended
+          python-version: "3.x"
 
-      - name: Extract and Convert Jupyter Notebooks
+      # --- Convert all .ipynb notebooks to .py files ---
+      - name: Convert notebooks to Python
         run: |
-          # Install required tools
           pip install nbconvert
           mkdir -p notebooks_py
-
-          # Convert all .ipynb files to .py for CodeQL analysis
-          echo "Converting Jupyter notebooks to Python scripts..."
-          find . -name "*.ipynb" -type f | while read notebook; do
-            echo "Converting $notebook"
+          for nb in $(find . -name '*.ipynb'); do
+            echo "Converting $nb"
             jupyter nbconvert --to script "$nb" --output-dir notebooks_py
+            echo "Converted $nb to notebooks_py/$(basename "${nb%.ipynb}.py")"
           done
-
-           # copy converted files back to the workspace root for scanning
+          # copy converted files back to the workspace root for scanning
           rsync -a notebooks_py/ .
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+      # --- Run CodeQL on the converted Python ---
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
-          category: "/language:python"
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
