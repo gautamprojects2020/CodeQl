@@ -15,10 +15,10 @@ jobs:
       security-events: write # required for CodeQL
       actions: read
       contents: read
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ["python"] # we treat notebooks as Python
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     language: ["python"] # we treat notebooks as Python
 
     steps:
       - name: Checkout repository
