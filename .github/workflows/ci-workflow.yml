@@ -11,15 +11,6 @@ on:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    # permissions:
-    #   security-events: write # required for CodeQL
-    #   actions: read
-    #   contents: read
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     language: ["python"] # we treat notebooks as Python
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,5 +36,3 @@ jobs:
       # --- Run CodeQL on the converted Python ---
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
