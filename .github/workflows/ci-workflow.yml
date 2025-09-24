@@ -51,6 +51,11 @@ jobs:
           # copy converted files back to the workspace root for scanning
           rsync -a notebooks_processed/ .
 
+      - name: Run Ruff linter
+        run: |
+          pip install ruff
+          ruff check notebooks_processed
+
       # --- Run CodeQL on the converted Python ---
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
