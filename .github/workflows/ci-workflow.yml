@@ -27,7 +27,7 @@ jobs:
           mkdir -p notebooks_processed
           for nb in $(find . -name '*.ipynb'); do
             echo "Converting $nb"
-            jupyter nbconvert --to script "$nb" --output-dir notebooks_processed
+            jupyter nbconvert --to python "$nb" --output-dir notebooks_processed
             echo "Converted $nb to notebooks_processed/$(basename "${nb%.ipynb}.py")"
           done
           # copy converted files back to the workspace root for scanning
