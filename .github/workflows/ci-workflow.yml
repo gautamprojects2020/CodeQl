@@ -11,10 +11,10 @@ on:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write # required for CodeQL
-      actions: read
-      contents: read
+    # permissions:
+    #   security-events: write # required for CodeQL
+    #   actions: read
+    #   contents: read
     # strategy:
     #   fail-fast: false
     #   matrix:
