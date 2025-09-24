@@ -36,3 +36,5 @@ jobs:
       # --- Run CodeQL on the converted Python ---
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
