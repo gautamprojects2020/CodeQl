@@ -24,14 +24,14 @@ jobs:
       - name: Convert notebooks to Python
         run: |
           pip install nbconvert
-          mkdir -p notebooks_py
+          mkdir -p notebooks_processed
           for nb in $(find . -name '*.ipynb'); do
             echo "Converting $nb"
-            jupyter nbconvert --to script "$nb" --output-dir notebooks_py
-            echo "Converted $nb to notebooks_py/$(basename "${nb%.ipynb}.py")"
+            jupyter nbconvert --to script "$nb" --output-dir notebooks_processed
+            echo "Converted $nb to notebooks_processed/$(basename "${nb%.ipynb}.py")"
           done
           # copy converted files back to the workspace root for scanning
-          rsync -a notebooks_py/ .
+          rsync -a notebooks_processed/ .
 
       # --- Run CodeQL on the converted Python ---
       - name: Initialize CodeQL
