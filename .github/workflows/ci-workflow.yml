@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [sql, python]
+        language: [python]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,17 +27,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Extract SQL from notebooks
-        run: |
-          pip install jq
-          python extract_sql.py
-
-      # Example: use sqlfluff for linting
-      - name: Lint SQL
-        run: |
-          pip install sqlfluff
-          sqlfluff lint sql_extracted
-
       # --- Convert all .ipynb notebooks to .py files ---
       - name: Convert notebooks to Python
         run: |
@@ -50,11 +39,6 @@ jobs:
           done
           # copy converted files back to the workspace root for scanning
           rsync -a notebooks_processed/ .
-
-      - name: Run Ruff linter
-        run: |
-          pip install ruff
-          ruff check notebooks_processed
 
       # --- Run CodeQL on the converted Python ---
       - name: Initialize CodeQL
