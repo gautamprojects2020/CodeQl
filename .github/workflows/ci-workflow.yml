@@ -56,4 +56,4 @@ jobs:
           name: analysis-results
           path: |
             echo "${{ github.workspace }}"
-            ${{ github.workspace }}/results/python.sarif
+            /home/runner/work/CodeQl/results/python.sarif
