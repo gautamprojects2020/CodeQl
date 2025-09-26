@@ -56,4 +56,4 @@ jobs:
           name: analysis-results
           path: |
             echo "${{ github.workspace }}"
-            ${{ github.workspace }}/python.sarif
+            ${{ github.workspace }}results/python.sarif
